@@ -1,5 +1,6 @@
 import express from "express"
 import morgan from 'morgan'
+import Contact from "./models/contact.js";
 
 const app = express();
 
@@ -56,15 +57,14 @@ app.get("/info", (request, response) => {
 
 //api
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Contact.find({}).then(persons => {
+    response.json(persons)
+  })
 });
 app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = persons.find((person) => person.id === id);
-
-  if (!person) return response.status(404).end();
-
-  response.json(person);
+  Contact.findById(request.params.id).then( person => {
+    response.json(person)
+  })
 });
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
@@ -82,16 +82,14 @@ app.post("/api/persons", (request, response) => {
     if (!body.name) return response.status(400).json( { error: 'name missing' })
     if (!body.number) return response.status(400).json( { error: 'number missing' })
     
-    const isDuplicate = persons.some( person => person.name === body.name)
-    if (isDuplicate) return response.status(409).json( { error: 'name must be unique' })
-
-    const person = {
-        id: Math.floor(Math.random() * 10000).toString(),
+    const contact = new Contact({
         name: body.name,
         number: body.number
-    }    
-    persons = [...persons, person]
-    response.json(person)    
+    })  
+    
+    contact.save().then( savedContact => {
+      response.json(savedContact)
+    })
 })
 
 const unknownEndpoint = (request, response) => {
@@ -99,7 +97,7 @@ const unknownEndpoint = (request, response) => {
 }
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
