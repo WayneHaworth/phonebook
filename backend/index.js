@@ -1,5 +1,5 @@
-import express from "express"
-import morgan from 'morgan'
+import express from "express";
+import morgan from "morgan";
 import Contact from "./models/contact.js";
 
 const app = express();
@@ -101,3 +101,20 @@ const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+app.use(express.json());
+app.use(express.static("dist"));
+
+app.use(
+  morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, "content-length"),
+      "-",
+      tokens["response-time"](req, res),
+      "ms",
+      JSON.stringify(req.body),
+    ].join(" ");
+  })
+);
