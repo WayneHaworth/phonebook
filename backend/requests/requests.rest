@@ -4,7 +4,7 @@ GET http://localhost:3001/api/persons
 GET http://localhost:3001/api/persons/691709264304cdab1fc16bb7
 
 ###
-DELETE http://localhost:3001/api/persons/3
+DELETE http://localhost:3001/api/persons/69241f784919464ad229ebb6
 
 ###
 POST http://localhost:3001/api/persons
@@ -13,4 +13,14 @@ Content-Type: application/json
 {
     "name": "sharon haworth the 3rd",
     "number": "0909"
+}
+
+###
+
+PUT http://localhost:3001/api/persons/6917096202d5aea001b32c4f
+Content-Type: application/json
+
+{
+    "name": "sharon",
+    "number": "999"
 }
