@@ -65,14 +65,14 @@ function App() {
       .create(newPersonObject)
       .then(newPerson => {
         setPersons([...persons, newPerson])
-
         setSuccessMessage(`Added ${newPerson.name}`)
         setTimeout( () => {
           setSuccessMessage(null)
         }, 5000)
       })
       .catch(error => {
-        alert(`Unable to create user: ${error}`)
+        console.log(error.response.data.error)
+        setErrorMessage(error.response.data.error)
       })
   }
 
